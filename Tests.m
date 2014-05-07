@@ -18,7 +18,7 @@ classdef Tests < matlab.unittest.TestCase
     end
     
     methods (Test)
-        %% Test LoadImage
+        %% Test image loading
         function testLoadImageIsNormalized(testCase)
             % Verify that the returned data is normalized
             im = LoadImage('face00001.bmp');
@@ -41,7 +41,7 @@ classdef Tests < matlab.unittest.TestCase
             testCase.verifyEqual(ii_im(:), dinfo1.ii_im(:), 'AbsTol', tol);
         end
         
-        %% Test ComputeBoxSum
+        %% Test feature computation
         function testComputeBoxSum(testCase)
             % Verify that ComputeBoxSum does a correct calculation
             [im, ii_im] = LoadImage('face00001.bmp');
@@ -60,7 +60,6 @@ classdef Tests < matlab.unittest.TestCase
             end
         end
         
-        %% Test Feature computation
         function testFeatureTypeI(testCase)
             % Verify that features of type I are calculated correctly
             [im, ii_im] = LoadImage('face00001.bmp');
@@ -109,7 +108,7 @@ classdef Tests < matlab.unittest.TestCase
         end
         
         function testFeatureTypes(testCase)
-            % Verify that all calculated features matches debug data
+            % Verify that all calculated features types matches debug data
             [~, ii_im] = LoadImage('face00001.bmp');
             dinfo2 = load('DebugInfo/debuginfo2.mat');
             x = dinfo2.x; y = dinfo2.y; w = dinfo2.w; h = dinfo2.h;
@@ -134,6 +133,21 @@ classdef Tests < matlab.unittest.TestCase
                 testCase.verifyLessThanOrEqual(x+w-1, 19);
                 testCase.verifyLessThanOrEqual(y+h-1, 19);
             end
+        end
+        
+        function testComputeFeature(testCase)
+            % Verify that features for a list of images matches debug data
+            ii_ims = cell(100, 1);
+            for i=1:100
+                fname = sprintf('face00%03d.bmp', i);
+                [~, ii_im] = LoadImage(fname);
+                ii_ims(i) = {ii_im};
+            end
+            dinfo3 = load('DebugInfo/debuginfo3.mat');
+            ftype = dinfo3.ftype;
+            tol = 1e-6;
+            testCase.verifyEqual(ComputeFeature(ii_ims, ftype), ...
+                dinfo3.fs, 'AbsTol', tol);
         end
     end
     
