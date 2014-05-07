@@ -1,4 +1,4 @@
-face-recognition
+face-detection
 ================
 
 Real-time face detection using Adaboost.
