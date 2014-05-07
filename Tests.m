@@ -107,6 +107,22 @@ classdef Tests < matlab.unittest.TestCase
             actual = FeatureTypeIV(ii_im, x, y, w, h);
             testCase.verifyEqual(actual, expected, 'AbsTol', tol);
         end
+        
+        function testFeatureTypes(testCase)
+            % Verify that all calculated features matches debug data
+            [~, ii_im] = LoadImage('face00001.bmp');
+            dinfo2 = load('DebugInfo/debuginfo2.mat');
+            x = dinfo2.x; y = dinfo2.y; w = dinfo2.w; h = dinfo2.h;
+            tol = 1e-6;
+            testCase.verifyEqual(FeatureTypeI(ii_im, x, y, w, h), ...
+                dinfo2.f1, 'AbsTol', tol);
+            testCase.verifyEqual(FeatureTypeII(ii_im, x, y, w, h), ...
+                dinfo2.f2, 'AbsTol', tol);
+            testCase.verifyEqual(FeatureTypeIII(ii_im, x, y, w, h), ...
+                dinfo2.f3, 'AbsTol', tol);
+            testCase.verifyEqual(FeatureTypeIV(ii_im, x, y, w, h), ...
+                dinfo2.f4, 'AbsTol', tol);
+        end
     end
     
 end
