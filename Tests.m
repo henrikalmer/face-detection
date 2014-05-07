@@ -5,10 +5,18 @@ classdef Tests < matlab.unittest.TestCase
     
     methods (Test)
         function testLoadImageIsNormalized(testCase)
+            % Verifies that the returned data is normalized
             addpath('Pics/TrainingImages/FACES/');
             im = LoadImage('face00001.bmp');
-            testCase.verifyEqual(int64(mean(im)), int64(0));
-            testCase.verifyEqual(int64(std(im)), int64(1));
+            testCase.verifyEqual(int64(mean(im(:))), int64(0));
+            testCase.verifyEqual(int64(std(im(:))), int64(1));
+        end
+        
+        function testLoadImageCumsum(testCase)
+            % Verifies that the integral image contains correct values
+            addpath('Pics/TrainingImages/FACES/');
+            [im, ii_im] = LoadImage('face00001.bmp');
+            testCase.verifyEqual(ii_im(2, 2), sum(sum(im(1:2, 1:2))))
         end
     end
     

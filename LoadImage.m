@@ -8,10 +8,10 @@ im = double(imread(im_fname));
 % Normalize pixel data to introduce invariance in illumination effects
 mu = mean(im(:));
 sigma = std(im(:)) + 1e-10; % Add small value to avoid zero division
-im = (im(:) - mu) / sigma;
+im(:) = (im(:) - mu) / sigma;
 
 % Compute the integral image
-ii_im = cumsum(im);
+ii_im = cumsum(cumsum(im, 1), 2);
 
 end
 
