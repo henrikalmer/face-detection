@@ -36,15 +36,21 @@ classdef Tests < matlab.unittest.TestCase
             addpath('Pics/TrainingImages/FACES/');
             [im, ii_im] = LoadImage('face00001.bmp');
             tol = 1e-6;
-            points = [[1 1]; [1 2]; [2 1]; [2 2]; [3 5]];
-            for i = 1:size(points, 1)
-                x = points(i,1); y = points(i,2);
-                w = 6; h = 6;
+            inputs = [[1 1 4 6];
+                      [1 2 7 2];
+                      [2 1 3 9];
+                      [2 2 10 10];
+                      [3 5 5 5]];
+            for i = 1:size(inputs, 1)
+                x = inputs(i,1); y = inputs(i,2);
+                w = inputs(i,3); h = inputs(i,4);
                 expected = sum(sum(im(y:y+h-1, x:x+w-1)));
                 actual = ComputeBoxSum(ii_im, x, y, w, h);
                 testCase.verifyEqual(actual, expected, 'AbsTol', tol);
             end 
         end
+        
+        %% Test Feature computation
     end
     
 end
