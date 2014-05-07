@@ -230,8 +230,8 @@ classdef Tests < matlab.unittest.TestCase
             dinfo4 = load('DebugInfo/debuginfo4.mat');
             ni = dinfo4.ni;
             all_ftypes = dinfo4.all_ftypes;
-            im_sfn = 'FaceData.mat';
-            f_sfn = 'FeaturesToMat.mat';
+            im_sfn = 'TestFaceData.mat';
+            f_sfn = 'TestFeaturesToMat.mat';
             rng(dinfo4.jseed);
             dirname = 'Pics/TrainingImages/FACES';
             LoadSaveImData(dirname, ni, im_sfn);
@@ -243,6 +243,7 @@ classdef Tests < matlab.unittest.TestCase
                 'AbsTol', tol);
             testCase.verifyEqual(faceData.ii_ims, dinfo4.ii_ims, ...
                 'AbsTol', tol);
+            delete(im_sfn, f_sfn);
         end
     end
     
