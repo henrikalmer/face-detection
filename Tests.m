@@ -149,6 +149,25 @@ classdef Tests < matlab.unittest.TestCase
             testCase.verifyEqual(ComputeFeature(ii_ims, ftype), ...
                 dinfo3.fs, 'AbsTol', tol);
         end
+        
+        %% Test vectorized feature computation
+        function testVecBoxSum(testCase)
+            [~, ii_im] = LoadImage('face00001.bmp');
+            inputs = [[1 1 4 6];
+                      [1 2 7 2];
+                      [2 1 3 9];
+                      [2 2 10 10];
+                      [3 5 5 5]];
+            tol = 1e-6;
+            for i = 1:size(inputs, 1)
+                x = inputs(i,1); y = inputs(i,2);
+                w = inputs(i,3); h = inputs(i,4);
+                b_vec = VecBoxSum(x, y, w, h, 19, 19);
+                A1 = ii_im(:)' * b_vec;
+                A2 = ComputeBoxSum(ii_im, x, y, w, h);
+                testCase.verifyEqual(A1, A2, 'AbsTol', tol);
+            end
+        end
     end
     
 end
