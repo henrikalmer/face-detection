@@ -20,20 +20,20 @@ classdef Tests < matlab.unittest.TestCase
     methods (Test)
         %% Test LoadImage
         function testLoadImageIsNormalized(testCase)
-            % Verifies that the returned data is normalized
+            % Verify that the returned data is normalized
             im = LoadImage('face00001.bmp');
             testCase.verifyEqual(int64(mean(im(:))), int64(0));
             testCase.verifyEqual(int64(std(im(:))), int64(1));
         end
         
         function testLoadImageCumsum(testCase)
-            % Verifies that the integral image contains correct values
+            % Verify that the integral image contains correct values
             [im, ii_im] = LoadImage('face00001.bmp');
             testCase.verifyEqual(ii_im(2, 2), sum(sum(im(1:2, 1:2))))
         end
         
         function testLoadImage(testCase)
-            % Verify that output from face00001.bmp matched debug data
+            % Verify that output for face00001.bmp matches debug data
             [im, ii_im] = LoadImage('face00001.bmp');
             dinfo1 = load('DebugInfo/debuginfo1.mat');
             tol = 1e-6;
@@ -61,6 +61,52 @@ classdef Tests < matlab.unittest.TestCase
         end
         
         %% Test Feature computation
+        function testFeatureTypeI(testCase)
+            % Verify that features of type I are calculated correctly
+            [im, ii_im] = LoadImage('face00001.bmp');
+            tol = 1e-6;
+            x = 4; y = 6; w = 3; h = 5;
+            expected = sum(sum(im(y:y+h-1, x:x+w-1))) ...
+                       - sum(sum(im(y+h:y+2*h-1, x:x+w-1)));
+            actual = FeatureTypeI(ii_im, x, y, w, h);
+            testCase.verifyEqual(actual, expected, 'AbsTol', tol);
+        end
+        
+        function testFeatureTypeII(testCase)
+            % Verify that features of type II are calculated correctly
+            [im, ii_im] = LoadImage('face00001.bmp');
+            tol = 1e-6;
+            x = 4; y = 6; w = 3; h = 5;
+            expected = sum(sum(im(y:y+h-1, x+w:x+2*w-1))) ...
+                       - sum(sum(im(y:y+h-1, x:x+w-1)));
+            actual = FeatureTypeII(ii_im, x, y, w, h);
+            testCase.verifyEqual(actual, expected, 'AbsTol', tol);
+        end
+        
+        function testFeatureTypeIII(testCase)
+            % Verify that features of type III are calculated correctly
+            [im, ii_im] = LoadImage('face00001.bmp');
+            tol = 1e-6;
+            x = 4; y = 6; w = 3; h = 5;
+            expected = sum(sum(im(y:y+h-1, x+w:x+2*w-1))) ...
+                       - sum(sum(im(y:y+h-1, x:x+w-1))) ...
+                       - sum(sum(im(y:y+h-1, x+2*w:x+3*w-1)));
+            actual = FeatureTypeIII(ii_im, x, y, w, h);
+            testCase.verifyEqual(actual, expected, 'AbsTol', tol);
+        end
+        
+        function testFeatureTypeIV(testCase)
+            % Verify that features of type IV are calculated correctly
+            [im, ii_im] = LoadImage('face00001.bmp');
+            tol = 1e-6;
+            x = 4; y = 6; w = 3; h = 5;
+            expected = sum(sum(im(y:y+h-1, x+w:x+2*w-1))) ...
+                       + sum(sum(im(y+h:y+2*h-1, x:x+w-1))) ...
+                       - sum(sum(im(y:y+h-1, x:x+w-1))) ...
+                       - sum(sum(im(y+h:y+2*h-1, x+w:x+2*w-1)));
+            actual = FeatureTypeIV(ii_im, x, y, w, h);
+            testCase.verifyEqual(actual, expected, 'AbsTol', tol);
+        end
     end
     
 end
