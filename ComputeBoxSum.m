@@ -3,7 +3,6 @@ function A = ComputeBoxSum(ii_im, x, y, w, h)
 %   Uses the integral image 'ii_im' to compute the sum of pixel values in
 %   the original image 'im' in the rectangular area given by c, y, w and h.
 
-
 % Pad with zeros to avoid index errors when x or y is 1
 ii_im = padarray(ii_im, [1 1]);
 x = x+1;
