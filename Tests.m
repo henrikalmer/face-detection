@@ -198,6 +198,34 @@ classdef Tests < matlab.unittest.TestCase
                 testCase.verifyEqual(actual4, expected4, 'AbsTol', tol);
             end
         end
+        
+        function testVecComputeFeature(testCase)
+            ii_ims = zeros(100, 19*19);
+            ii_ims_cell = cell(100, 1);
+            for i=1:100
+                fname = sprintf('face00%03d.bmp', i);
+                [~, ii_im] = LoadImage(fname);
+                ii_ims(i,:) = ii_im(:);
+                ii_ims_cell(i) = {ii_im};
+            end
+            tol = 1e-6;
+            all_ftypes = [[1 1 1 2 3];
+                          [2 1 1 2 3];
+                          [3 1 1 2 3];
+                          [4 1 1 2 3];
+                          [1 2 4 1 1];
+                          [2 4 3 2 3];
+                          [3 7 6 1 2];
+                          [4 1 3 2 3];];
+            fmat = VecAllFeatures(all_ftypes, 19, 19);
+            for i=1:length(all_ftypes)
+                actual = VecComputeFeature(ii_ims, fmat(:, i));
+                expected = ComputeFeature(ii_ims_cell, all_ftypes(i, :));
+                testCase.assertEqual(actual, expected', 'AbsTol', tol);
+            end
+        end
+        
+        %% Test feature extraction
     end
     
 end
