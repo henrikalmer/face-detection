@@ -226,6 +226,24 @@ classdef Tests < matlab.unittest.TestCase
         end
         
         %% Test feature extraction
+        function testDataExtraction(testCase)
+            dinfo4 = load('DebugInfo/debuginfo4.mat');
+            ni = dinfo4.ni;
+            all_ftypes = dinfo4.all_ftypes;
+            im_sfn = 'FaceData.mat';
+            f_sfn = 'FeaturesToMat.mat';
+            rng(dinfo4.jseed);
+            dirname = 'Pics/TrainingImages/FACES';
+            LoadSaveImData(dirname, ni, im_sfn);
+            ComputeSaveFData(all_ftypes, f_sfn);
+            faceData = load(im_sfn);
+            featureData = load(f_sfn);
+            tol = 1e-6;
+            testCase.verifyEqual(featureData.fmat, dinfo4.fmat, ...
+                'AbsTol', tol);
+            testCase.verifyEqual(faceData.ii_ims, dinfo4.ii_ims, ...
+                'AbsTol', tol);
+        end
     end
     
 end
