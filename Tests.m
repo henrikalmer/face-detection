@@ -2,12 +2,21 @@ classdef Tests < matlab.unittest.TestCase
     
     properties
         OriginalPath
+        Fdata
+        NFdata
+        FTdata
     end
     
     methods (TestMethodSetup)
         function addImagesToPath(testCase)
             testCase.OriginalPath = path;
             addpath('Pics/TrainingImages/FACES/');
+        end
+        
+        function loadTrainingData(testCase)
+            testCase.Fdata = load('FaceData.mat');
+            testCase.NFdata = load('NonFaceData.mat');
+            testCase.FTdata = load('FeaturesToUse.mat');
         end
     end
     
@@ -244,6 +253,32 @@ classdef Tests < matlab.unittest.TestCase
             testCase.verifyEqual(faceData.ii_ims, dinfo4.ii_ims, ...
                 'AbsTol', tol);
             delete(im_sfn, f_sfn);
+        end
+        
+        %% Test Adaboost
+        function testWeakClassifier(testCase)
+            % Verify that the weak classifier learns correctly
+            % Load data
+            pf_ii_ims = testCase.Fdata.ii_ims;
+            nf_ii_ims = testCase.NFdata.ii_ims;
+            fmat = testCase.FTdata.fmat;
+            ftype_vec = fmat(:, 12028);
+            pfs = pf_ii_ims*ftype_vec;
+            nfs = nf_ii_ims*ftype_vec;
+            n = length(pfs);
+            m = length(nfs);
+            % Initialize weights
+            pws = repmat(1/(2*(n-m)), m, 1);
+            nws = repmat(1/(2*m), n, 1);
+            % Put together input data
+            fs = [pfs; nfs];                    % All feature responses
+            ys = [ones(n, 1); zeros(m, 1)];     % Image classifications
+            ws = [pws; nws] / sum([pws; nws]);  % Normalized weights
+            % Call function and verify results
+            [a_theta, a_p, ~] = LearnWeakClassifier(ws, fs, ys);
+            tol = 2*1e-1;
+            testCase.assertEqual(a_theta,  -3.6453, 'AbsTol', tol);
+            testCase.assertEqual(a_p,  1, 'AbsTol', tol);
         end
     end
     
