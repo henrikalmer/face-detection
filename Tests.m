@@ -123,6 +123,18 @@ classdef Tests < matlab.unittest.TestCase
             testCase.verifyEqual(FeatureTypeIV(ii_im, x, y, w, h), ...
                 dinfo2.f4, 'AbsTol', tol);
         end
+        
+        function testEnumAllFeatures(testCase)
+            % Verify that the generated list of possible features is sane
+            all_ftypes = EnumAllFeatures(19, 19);
+            testCase.verifyEqual(size(all_ftypes, 1), 32746);
+            for i=1:size(all_ftypes, 1)
+                x = all_ftypes(i, 2); y = all_ftypes(i, 3);
+                w = all_ftypes(i, 4); h = all_ftypes(i, 5);
+                testCase.verifyLessThanOrEqual(x+w-1, 19);
+                testCase.verifyLessThanOrEqual(y+h-1, 19);
+            end
+        end
     end
     
 end
