@@ -168,6 +168,24 @@ classdef Tests < matlab.unittest.TestCase
                 testCase.verifyEqual(A1, A2, 'AbsTol', tol);
             end
         end
+        
+        function testVecFeature(testCase)
+            [~, ii_im] = LoadImage('face00001.bmp');
+            inputs = [[1 1 4 6];
+                      [1 2 7 2];
+                      [2 1 3 4];
+                      [2 2 7 3];
+                      [3 5 5 5]];
+            tol = 1e-6;
+            for i = 1:size(inputs, 1)
+                x = inputs(i,1); y = inputs(i,2);
+                w = inputs(i,3); h = inputs(i,4);
+                ftype_vec = VecFeature([1, x, y, w, h], 19, 19);
+                A1 = ii_im(:)' * ftype_vec;
+                A2 = FeatureTypeI(ii_im, x, y, w, h);
+                testCase.verifyEqual(A1, A2, 'AbsTol', tol);
+            end
+        end
     end
     
 end
