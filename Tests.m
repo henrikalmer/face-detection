@@ -268,17 +268,32 @@ classdef Tests < matlab.unittest.TestCase
             n = length(pfs);
             m = length(nfs);
             % Initialize weights
-            pws = repmat(1/(2*(n-m)), m, 1);
-            nws = repmat(1/(2*m), n, 1);
+            pws = repmat(1/(2*(n-m)), n, 1);
+            nws = repmat(1/(2*m), m, 1);
             % Put together input data
             fs = [pfs; nfs];                    % All feature responses
             ys = [ones(n, 1); zeros(m, 1)];     % Image classifications
             ws = [pws; nws] / sum([pws; nws]);  % Normalized weights
             % Call function and verify results
             [a_theta, a_p, ~] = LearnWeakClassifier(ws, fs, ys);
-            tol = 2*1e-1;
+            tol = 1e-3;
             testCase.assertEqual(a_theta,  -3.6453, 'AbsTol', tol);
             testCase.assertEqual(a_p,  1, 'AbsTol', tol);
+        end
+        
+        function testBoostingAlg(testCase)
+            dinfo6 = load('DebugInfo/debuginfo6.mat');
+            T = dinfo6.T;
+            % Limit to 1000 integral images
+            FT = testCase.FTdata;
+            FT.fmat = FT.fmat(:,1:1000);
+            % Call fn and verify results to debug data
+            Cparams = BoostingAlg(testCase.Fdata, testCase.NFdata, FT, T);
+            tol = 1e-6;
+            testCase.assertEqual(Cparams.alphas, dinfo6.alphas, ...
+                'AbsTol', tol);
+            testCase.assertEqual(Cparams.Thetas(:), dinfo6.Thetas(:), ...
+                'AbsTol', tol);
         end
     end
     
