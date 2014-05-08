@@ -5,6 +5,7 @@ classdef Tests < matlab.unittest.TestCase
         Fdata
         NFdata
         FTdata
+        Cdata
     end
     
     methods (TestMethodSetup)
@@ -17,6 +18,7 @@ classdef Tests < matlab.unittest.TestCase
             testCase.Fdata = load('FaceData.mat');
             testCase.NFdata = load('NonFaceData.mat');
             testCase.FTdata = load('FeaturesToUse.mat');
+            testCase.Cdata = load('StrongClassifier.mat');
         end
     end
     
@@ -296,13 +298,22 @@ classdef Tests < matlab.unittest.TestCase
                 'AbsTol', tol);
         end
         
-        %% Test evaluation
+        %% Test detection
         function testApplyDetector(testCase)
             [~, ii_im] = LoadImage('face00001.bmp');
-            Cdata = load('StrongClassifier.mat');
             tol = 1e-3;
-            score = ApplyDetector(Cdata.Cparams, ii_im);
+            score = ApplyDetector(testCase.Cdata.Cparams, ii_im);
             testCase.assertEqual(score, 9.1409, 'AbsTol', tol);
+        end
+        
+        function testScanImage(testCase)
+            % Verify that scan image and ApplyDetector return the same
+            % result on the same input
+            im = imread('face00001.bmp');
+            [~, ii_im] = LoadImage('face00001.bmp');
+            actual = ScanImageFixedSize(testCase.Cdata.Cparams, im);
+            expected = ApplyDetector(testCase.Cdata.Cparams, ii_im);
+            testCase.assertEqual(actual(1,5), expected);
         end
     end
     
