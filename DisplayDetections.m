@@ -3,7 +3,7 @@ function DisplayDetections(im, dets)
 
 figure();
 imshow(im);
-for i=1:length(dets)
+for i=1:size(dets,1)
     rectangle('Position', dets(i,1:4), 'EdgeColor', 'r');
 end
 
