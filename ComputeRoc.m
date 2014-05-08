@@ -27,7 +27,7 @@ end
 % Compute true and false positive rates by varying threshold
 min_t = min([pf_scores; nf_scores]);
 max_t = max([pf_scores; nf_scores]);
-ts = min_t:0.1:max_t;
+ts = min_t:0.05:max_t;
 tpr = zeros(length(ts), 1);
 fpr = zeros(length(ts), 1);
 for i=1:length(ts)
@@ -41,6 +41,8 @@ end
 figure(1);
 plot(fpr, tpr);
 axis equal;
+
+% [ts' tpr fpr] % DEBUG point
 
 end
 
