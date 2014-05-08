@@ -304,9 +304,6 @@ classdef Tests < matlab.unittest.TestCase
             score = ApplyDetector(Cdata.Cparams, ii_im);
             testCase.assertEqual(score, 9.1409, 'AbsTol', tol);
         end
-        
-        function testComputeROC(testCase)
-        end
     end
     
 end
