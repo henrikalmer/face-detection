@@ -295,6 +295,18 @@ classdef Tests < matlab.unittest.TestCase
             testCase.assertEqual(Cparams.Thetas(:), dinfo6.Thetas(:), ...
                 'AbsTol', tol);
         end
+        
+        %% Test evaluation
+        function testApplyDetector(testCase)
+            [~, ii_im] = LoadImage('face00001.bmp');
+            Cdata = load('StrongClassifier.mat');
+            tol = 1e-3;
+            score = ApplyDetector(Cdata.Cparams, ii_im);
+            testCase.assertEqual(score, 9.1409, 'AbsTol', tol);
+        end
+        
+        function testComputeROC(testCase)
+        end
     end
     
 end
