@@ -309,10 +309,10 @@ classdef Tests < matlab.unittest.TestCase
         function testScanImage(testCase)
             % Verify that scan image and ApplyDetector return the same
             % result on the same input
-            im = imread('face00001.bmp');
             [~, ii_im] = LoadImage('face00001.bmp');
-            actual = ScanImageFixedSize(testCase.Cdata.Cparams, im);
-            expected = ApplyDetector(testCase.Cdata.Cparams, ii_im);
+            Cparams = testCase.Cdata.Cparams;
+            actual = ScanImageFixedSize(Cparams, 'face00001.bmp');
+            expected = ApplyDetector(Cparams, ii_im);
             testCase.assertEqual(actual(1,5), expected);
         end
     end

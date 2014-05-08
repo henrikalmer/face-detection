@@ -1,5 +1,7 @@
-function dets = ScanImageFixedSize(Cparams, im)
+function dets = ScanImageFixedSize(Cparams, im_fname)
 %SCANIMAGEFIXEDSIZE Scans an image for faces
+
+im = imread(im_fname);
 
 % Convert to grayscale if necessary
 if size(im,3) > 1
