@@ -1,7 +1,5 @@
-function dets = ScanImageFixedSize(Cparams, im_fname)
+function dets = ScanImageFixedSize(Cparams, im)
 %SCANIMAGEFIXEDSIZE Scans an image for faces
-
-im = imread(im_fname);
 
 % Convert to grayscale if necessary
 if size(im,3) > 1
@@ -26,7 +24,7 @@ faces = 1;
 for i=1:(size(ii_im, 2) - L + 1)
     for j=1:(size(ii_im, 1) - L + 1)
         x = i+1; y = j+1;
-        % Shortcut computations of mean and standard deviation
+        % Computations of mean and standard deviation
         mean = ii_im_pad(y+L-1, x+L-1) ...
                 - ii_im_pad(y+L-1, x-1) ...
                 - ii_im_pad(y-1, x+L-1) ...
