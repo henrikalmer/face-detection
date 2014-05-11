@@ -309,11 +309,29 @@ classdef Tests < matlab.unittest.TestCase
         function testScanImage(testCase)
             % Verify that scan image and ApplyDetector return the same
             % result on the same input
+            im = imread('face00001.bmp');
             [~, ii_im] = LoadImage('face00001.bmp');
             Cparams = testCase.Cdata.Cparams;
-            actual = ScanImageFixedSize(Cparams, 'face00001.bmp');
+            actual = ScanImageFixedSize(Cparams, im);
             expected = ApplyDetector(Cparams, ii_im);
             testCase.assertEqual(actual(1,5), expected);
+        end
+        
+        %% Test optimization
+        function testBoostingAlgOpt(testCase)
+            dinfo6 = load('DebugInfo/debuginfo6.mat');
+            T = dinfo6.T;
+            % Limit to 1000 integral images
+            FT = testCase.FTdata;
+            FT.fmat = FT.fmat(:,1:1000);
+            % Call fn and verify results
+            Cparams = BoostingAlg(testCase.Fdata, testCase.NFdata, FT, T);
+            CparamsOpt = BoostingAlgOpt(testCase.Fdata, testCase.NFdata, FT, T);
+            tol = 1e-6;
+            testCase.assertEqual(CparamsOpt.alphas, Cparams.alphas, ...
+                'AbsTol', tol);
+            testCase.assertEqual(CparamsOpt.Thetas(:), Cparams.Thetas(:), ...
+                'AbsTol', tol);
         end
     end
     
