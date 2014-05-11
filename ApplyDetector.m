@@ -16,6 +16,7 @@ for i=1:fn
     fi = Cparams.Thetas(i,1);
     fmat(:,i) = VecFeature(Cparams.all_ftypes(fi,:), 19, 19);
 end
+fmat = sparse(fmat);
 
 j = Cparams.Thetas(:,1);
 is_III = Cparams.all_ftypes(j, 1) == 3;
