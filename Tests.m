@@ -18,7 +18,7 @@ classdef Tests < matlab.unittest.TestCase
             testCase.Fdata = load('FaceData.mat');
             testCase.NFdata = load('NonFaceData.mat');
             testCase.FTdata = load('FeaturesToUse.mat');
-            testCase.Cdata = load('StrongClassifier.mat');
+            testCase.Cdata = load('StrongClassifier10.mat');
         end
     end
     
